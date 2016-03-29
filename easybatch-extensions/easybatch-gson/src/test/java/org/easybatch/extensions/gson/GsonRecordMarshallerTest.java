@@ -53,9 +53,11 @@ public class GsonRecordMarshallerTest {
         Tweet tweet = new Tweet(1, "foo", "hi");
         GenericRecord<Tweet> record = new GenericRecord<>(header, tweet);
 
-        String expected = "{\"id\":1,\"user\":\"foo\",\"message\":\"hi\"}";
         String actual = marshaller.processRecord(record).getPayload();
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsOnlyOnce("\"id\":1");
+        assertThat(actual).containsOnlyOnce("\"user\":\"foo\"");
+        assertThat(actual).containsOnlyOnce("\"message\":\"hi\"");
+        assertThat(actual.replaceAll(" ", "")).hasSize(36);
     }
 }
